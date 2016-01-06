@@ -1,0 +1,15 @@
+{
+  "name": "flyn-webpack",
+  "version": "0.0.1",
+  "description": "Flyn's webpack play",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Flyn Tse",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  }
+}
