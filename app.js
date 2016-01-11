@@ -1,9 +1,9 @@
 'use strict';
 
-// import {Mycode} from './component.js';
+import Mycode from './src/js/modules/component.js';
 // import {MyModule} from './modules/MyModule.js';
-var Mycode = require('./component.js');
-var MyModule = require('./modules/MyModule.js');
+// var Mycode = require('./component.js');
+var MyModule = require('./src/js/modules/module-1.js');
 var num = Mycode(11);
 var txt = document.createElement('h2');
 txt.innerHTML = num;
