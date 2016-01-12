@@ -1,17 +1,18 @@
 var path = require('path');
 var webpack = require('webpack');
 var commonPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
+var src = {
+    js: './src/js/page/'
+}
 
 module.exports = {
-    entry: [
-      path.resolve(__dirname, 'src/js/page/a.js'),
-      path.resolve(__dirname, 'src/js/page/b.js'),
-      path.resolve(__dirname, 'src/js/page/c/c.js'),
-      'webpack/hot/dev-server',
-      'webpack-dev-server/client?http://localhost:8080',
-    ],
+    entry: {
+      a:src.js+'a.js',
+      b:src.js+'b.js',
+      c:src.js+'c/c.js'
+    },
     output: {
-        path: path.resolve(__dirname, 'build/js/page'),
+        path: 'build/js/page',
         filename: '[name].js'
     },
     module: {
