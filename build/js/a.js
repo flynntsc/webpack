@@ -1,5 +1,6 @@
-webpackJsonp([0],[
-/* 0 */
+webpackJsonp([0],{
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8,7 +9,7 @@ webpackJsonp([0],[
 
 	var _m2 = _interopRequireDefault(_m);
 
-	var _m3 = __webpack_require__(2);
+	var _m3 = __webpack_require__(9);
 
 	var _m4 = _interopRequireDefault(_m3);
 
@@ -20,8 +21,8 @@ webpackJsonp([0],[
 	console.info('n2 is' + _m4.default);
 
 /***/ },
-/* 1 */,
-/* 2 */
+
+/***/ 9:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33,4 +34,5 @@ webpackJsonp([0],[
 	exports.default = 22;
 
 /***/ }
-]);
+
+});
