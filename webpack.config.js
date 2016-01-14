@@ -6,7 +6,12 @@ var src = {
 }
 
 module.exports = {
-    entry: {
+    entry: [
+        'webpack/hot/dev-server',
+        'webpack-dev-server/client?http://localhost:8080',
+    ],
+    // 多文件
+    /*entry: {
         'js/index':src.js+'index.js',
         'js/a':src.js+'a.js',
         'js/b':src.js+'b.js',
@@ -16,7 +21,7 @@ module.exports = {
         path: path.resolve(__dirname, 'build'),
         filename: '[name].js',
         // publicPath: './'
-    },
+    },*/
     resolve: {
         extensions: ['','.js','.jsx','.css','.less','.scss','.jpg','.png','.gif']
     },
