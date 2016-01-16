@@ -1,19 +1,23 @@
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var src = {
-    js: './src/js/page/'
-}
+var webpack = require('webpack'),
+    path = require('path'),
+    HtmlWebpackPlugin = require('html-webpack-plugin'),
+    OpenBrowserPlugin = require('open-browser-webpack-plugin'),
+    UglifyJsPlugin = webpack.optimize.UglifyJsPlugin,
+    CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin,
+    src = {
+        js: './src/js/page/'
+    };
 
 module.exports = {
-    entry: [
-        'webpack/hot/dev-server',
-        'webpack-dev-server/client?http://localhost:8080',
-    ],
-    // 多文件
-    /*entry: {
+    // entry: [
+    //     'webpack/hot/dev-server',
+    //     'webpack-dev-server/client?http://localhost:8080',
+    // ],
+
+    // multiple entry
+    entry: {
         'js/index':src.js+'index.js',
-        'js/a':src.js+'a.js',
+        'js/a':src.js+'a.jsx',
         'js/b':src.js+'b.js',
         'js/c':src.js+'c/c.js'
     },
@@ -21,33 +25,38 @@ module.exports = {
         path: path.resolve(__dirname, 'build'),
         filename: '[name].js',
         // publicPath: './'
-    },*/
+    },
     resolve: {
         extensions: ['','.js','.jsx','.css','.less','.scss','.jpg','.png','.gif']
     },
     module: {
         loaders: [{
-            test: /\.js$/,
+            test: /\.js[x]?$/,
             exclude: /node_modules/,
-            loader: 'babel-loader'
-        }, {
-            test: /\.jsx$/,
-            loader: 'babel-loader!jsx-loader?harmony'
+
+            // way 1
+            loader: 'babel?presets[]=es2015&presets[]=react'
+
+            /*// way 2
+            loader: 'babel',
+            query: {
+                presets: ['es2015','react']
+            }*/
         },{
             test: /\.css$/,
-            loader: 'style!css'
+            loader: 'style!css?module'
         },{
             test: /\.less$/,
-            loader: 'style!css!less'
+            loader: 'style!css?module!less'
         },{
             test: /\.scss$/,
-            loader: 'style!css!sass'
+            loader: 'style!css?module!sass'
         },{
             test: /\.(woff|eot|ttf)$/i,
             loader: 'url?limit=10000&name=fonts/[hash:8].[name].[ext]'
         },{
             test: /\.(jpg|png|gif|svg)$/,
-            loader: 'url-loader?limit=10000'
+            loader: 'url?limit=10000'
             // loaders: [
             //     'image?{bypassOnDebug: true, progressive:true, \
             //         optimizationLevel: 3, pngquant:{quality: "65-80"}}',
@@ -57,7 +66,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin(
+        new CommonsChunkPlugin(
             'js/common.js',
             [
                 'js/a',
@@ -65,20 +74,29 @@ module.exports = {
                 'js/c'
             ]
         ),
+        /*new UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),*/
         new HtmlWebpackPlugin({
             title: '我是首页',
             template: './src/html/index.html',
             filename: 'index.html',
-            inject: 'body',
-            hash: true,
+            inject: true,
+            // hash: true,
             chunks: ['js/index']
         }),
         new HtmlWebpackPlugin({
+            title: '自动生成title A',
             template: './src/html/a.html',
             filename: 'a.html',
-            inject: 'body',
-            hash: true,
+            inject: true,
+            // hash: true,
             chunks: ['js/common.js', 'js/a']
+        }),
+        new OpenBrowserPlugin({
+            url: 'http://localhost:8080/a.html'
         })
     ]
 };

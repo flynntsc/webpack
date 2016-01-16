@@ -1,6 +1,10 @@
 .m1{
-	content: 'I am m1';
-	height: 100px;
-	width: 100px;
+	padding-top:100px;
+	height: 300px;
+	width: 300px;
 	background: url('./m1.png') no-repeat 50% 50% #f90;
+	color:#fff;
+}
+:global(.m1) {
+	color:#f00;
 }
