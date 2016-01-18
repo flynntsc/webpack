@@ -1,6 +1,6 @@
 'use strict';
-require('./../../../css/reset.scss');
-require('./m1.css');
+require('./../../../css/reset.css');
+require('./m1.scss');
 
 function create() {
 	var div = document.createElement('div'),
@@ -9,6 +9,6 @@ function create() {
 	img.src = require('./m1.png');
 	div.appendChild(img);
 	document.querySelector('#g-ft').appendChild(div);
-	return 100;
+	return 112;
 }
 export default create;
