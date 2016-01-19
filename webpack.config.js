@@ -8,25 +8,25 @@ var webpack = require('webpack'),
     ProvidePlugin = webpack.ProvidePlugin,
     UglifyJsPlugin = webpack.optimize.UglifyJsPlugin,
     CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin,
-    entryPath = path.join(__dirname,'./src/js/page/'),
-    nodeModules = path.join(__dirname,'./node_modules');
+    entryJsPath = path.join(__dirname,'./src/js/page/'),
+    nodeModulesPath = path.join(__dirname,'./node_modules/');
 
 module.exports = {
     entry: {
         'js/index':[
             'webpack/hot/dev-server',
             'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryPath,'index.js')
+            path.join(entryJsPath,'index.js')
         ],
         'js/a':[
             'webpack/hot/dev-server',
             'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryPath,'a.jsx')
+            path.join(entryJsPath,'a.jsx')
         ],
         'js/b':[
             'webpack/hot/dev-server',
             'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryPath,'b.js')
+            path.join(entryJsPath,'b.js')
         ]
     },
     output: {
@@ -38,20 +38,20 @@ module.exports = {
     resolve: {
         extensions: ['','.js','.jsx','.css','.less','.scss','.jpg','.png','.gif'],
         alias: {
-            'react': path.join(nodeModules,'/react/dist/react.min'),
-            'react-dom': path.join(nodeModules,'/react-dom/dist/react-dom.min'),
-            'jquery': path.join(nodeModules,'/jquery/dist/jquery.min')
+            'react': path.join(nodeModulesPath,'react/dist/react.min'),
+            'react-dom': path.join(nodeModulesPath,'react-dom/dist/react-dom.min'),
+            'jquery': path.join(nodeModulesPath,'jquery/dist/jquery.min')
         }
     },
     module: {
         noParse: [
-            path.join(nodeModules,'/react/dist/react.min'),
-            path.join(nodeModules,'/react/dist/react-dom.min'),
-            path.join(nodeModules,'/react/dist/jquery.min')
+            path.join(nodeModulesPath,'react/dist/react.min'),
+            path.join(nodeModulesPath,'react/dist/react-dom.min'),
+            path.join(nodeModulesPath,'react/dist/jquery.min')
         ],
         loaders: [{
             test: /\.js[x]?$/,
-            exclude: /node_modules/,
+            exclude: [nodeModulesPath],
 
             // way 1
             loader: 'babel?presets[]=es2015&presets[]=react'
