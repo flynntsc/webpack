@@ -5,12 +5,15 @@ var webpack = require('webpack'),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
     autoprefixer = require('autoprefixer'),
     precss = require('precss'),
+    env = process.env.WEBPACK_ENV,
     ProvidePlugin = webpack.ProvidePlugin,
     UglifyJsPlugin = webpack.optimize.UglifyJsPlugin,
     CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin,
     entryJsPath = path.join(__dirname,'./src/js/page/'),
     nodeModulesPath = path.join(__dirname,'./node_modules/');
-
+if(env === 'build') {
+    console.info('run webpack');
+}
 module.exports = {
     entry: {
         'js/index':[

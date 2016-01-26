@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Com1 from './../../components/com1/com1.jsx';
 import $ from 'jquery';
 import Fn from './../modules/m1/m1.js';
 import style from './../modules/m1/m1.scss';
