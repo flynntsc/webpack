@@ -1,4 +1,4 @@
-var webpack = require('webpack'),
+const webpack = require('webpack'),
     path = require('path'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     OpenBrowserPlugin = require('open-browser-webpack-plugin'),
@@ -9,27 +9,29 @@ var webpack = require('webpack'),
     ProvidePlugin = webpack.ProvidePlugin,
     UglifyJsPlugin = webpack.optimize.UglifyJsPlugin,
     CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin,
-    entryJsPath = path.join(__dirname,'./src/js/page/'),
-    nodeModulesPath = path.join(__dirname,'./node_modules/');
+    entryJsPath = path.join(__dirname, './src/js/page/'),
+    nodeModulesPath = path.join(__dirname, './node_modules/');
+
 if(env === 'build') {
     console.info('run webpack');
 }
+
 module.exports = {
     entry: {
-        'js/index':[
+        'js/index': [
             'webpack/hot/dev-server',
             'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryJsPath,'index.js')
+            path.join(entryJsPath, 'index.js')
         ],
-        'js/a':[
+        'js/a': [
             'webpack/hot/dev-server',
             'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryJsPath,'a.jsx')
+            path.join(entryJsPath, 'a.jsx')
         ],
-        'js/b':[
+        'js/b': [
             'webpack/hot/dev-server',
             'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryJsPath,'b.js')
+            path.join(entryJsPath, 'b.js')
         ]
     },
     output: {
@@ -39,55 +41,71 @@ module.exports = {
         // publicPath: './'
     },
     resolve: {
-        extensions: ['','.js','.jsx','.css','.less','.scss','.jpg','.png','.gif'],
+        extensions: ['', '.js', '.jsx', '.css', '.less', '.scss', '.jpg', '.png', '.gif'],
+        root: [path.join(__dirname, 'src')],
+        modulesDirectories: ['node_modules'],
         alias: {
-            'react': path.join(nodeModulesPath,'react/dist/react.min'),
-            'react-dom': path.join(nodeModulesPath,'react-dom/dist/react-dom.min'),
-            'jquery': path.join(nodeModulesPath,'jquery/dist/jquery.min')
+            'react': path.join(nodeModulesPath, 'react/dist/react.min'),
+            'react-dom': path.join(nodeModulesPath, 'react-dom/dist/react-dom.min'),
+            'jquery': path.join(nodeModulesPath, 'jquery/dist/jquery.min')
         }
     },
+    devtool: '#inline-source-map',
     module: {
         noParse: [
-            path.join(nodeModulesPath,'react/dist/react.min'),
-            path.join(nodeModulesPath,'react/dist/react-dom.min'),
-            path.join(nodeModulesPath,'react/dist/jquery.min')
+            path.join(nodeModulesPath, 'react/dist/react.min'),
+            path.join(nodeModulesPath, 'react/dist/react-dom.min'),
+            path.join(nodeModulesPath, 'react/dist/jquery.min')
         ],
         loaders: [{
-            test: /\.js[x]?$/,
-            exclude: [nodeModulesPath],
+                test: /\.js[x]?$/,
+                exclude: [nodeModulesPath],
+                // 限定范围
+                // include:[
+                //     path.join(process.cwd(),'./src'),
+                //     path.join(process.cwd(),'./demo')
+                // ],
 
-            // way 1
-            loader: 'babel?presets[]=es2015&presets[]=react'
+                // way 1
+                loader: 'babel?presets[]=es2015&presets[]=react'
 
-            /*// way 2
-            loader: 'babel',
-            query: {
-                presets: ['es2015','react']
-            }*/
-        },{
-            test: /\.css$/,
-            loader: ExtractTextPlugin.extract('style-loader','css!postcss')
-            // loader: 'style!css?module'
-        },{
-            test: /\.less$/,
-            loader: ExtractTextPlugin.extract('style-loader','css?module!postcss!less')
-            // loader: 'style!css?module!less'
-        },{
-            test: /\.scss$/,
-            loader: ExtractTextPlugin.extract('style-loader','css?module!postcss!sass')
-            // loader: 'style!css?module!sass'
-        },{
-            test: /\.(woff|eot|ttf)$/i,
-            loader: 'url?limit=10000&name=fonts/[hash:8].[name].[ext]'
-        },{
-            test: /\.(jpg|png|gif|svg)$/,
-            loader: 'url?limit=10000'
-            /*loaders: [
-                'image?{bypassOnDebug: true, progressive:true, \
-                    optimizationLevel: 3, pngquant:{quality: "65-80"}}',
-                'url?limit=10000&name=img/[hash:8].[name].[ext]',
-            ]*/
-        }
+                // way 2
+                // loader: 'babel',
+                // query: {
+                //     presets: ['es2015','react'],
+                // }
+            },
+            /*{
+                       test: /\.css$/,
+                       loader: 'style!css?module&localIdentName=[name]-[local]-[hash:base64:5]'
+                       // require('./main.css')
+                       // .title{color:#f00;}
+                       // => .main-title-3LKTD{color:#f00;}
+                   }, */
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css!postcss'),
+                // loader: 'style!css?module',
+            }, {
+                test: /\.less$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css?module!postcss!less'),
+                // loader: 'style!css?module!less',
+            }, {
+                test: /\.scss$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css?module!postcss!sass'),
+                // loader: 'style!css?module!sass',
+            }, {
+                test: /\.(woff|eot|ttf)$/i,
+                loader: 'url?limit=10000&name=fonts/[hash:8].[name].[ext]'
+            }, {
+                test: /\.(jpg|png|gif|svg)$/,
+                loader: 'url?limit=10000',
+                /*loaders: [
+                    'image?{bypassOnDebug: true, progressive:true, \
+                        optimizationLevel: 3, pngquant:{quality: "65-80"}}',
+                    'url?limit=10000&name=img/[hash:8].[name].[ext]',
+                ]*/
+            }
         ]
     },
     externals: {
@@ -106,12 +124,9 @@ module.exports = {
         }),*/
 
         new CommonsChunkPlugin(
-            'js/common.js',
-            [
-                'js/a',
-                'js/b'
-            ]
+            'js/common.js', ['js/a', 'js/b']
         ),
+        // don't use in dev
         /*new UglifyJsPlugin({
             compress: {
                 warnings: false
@@ -135,9 +150,11 @@ module.exports = {
             url: 'http://localhost:8080/a.html'
         })
     ],
-    postcss: function() {
+    postcss: function () {
         return [
-            autoprefixer({browsers: ['last 2 versions']}),
+            autoprefixer({
+                browsers: ['last 2 versions']
+            }),
             precss
         ];
     }

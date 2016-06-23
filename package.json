@@ -3,11 +3,8 @@
   "version": "0.0.1",
   "description": "Flyn's webpack play",
   "main": "index.js",
-  "babel": {
-    "presets": [
-      "es2015",
-      "react"
-    ]
+  "engines": {
+    "node": "^6.2.2"
   },
   "scripts": {
     "build": "WEBPACK_ENV=build webpack",
@@ -25,13 +22,13 @@
     "bundle-loader": "^0.5.4",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
-    "file-loader": "^0.8.5",
-    "html-webpack-plugin": "^1.7.0",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.21.0",
     "img-loader": "^1.2.2",
     "jquery": "^2.2.0",
-    "node-sass": "^3.4.2",
+    "node-sass": "^3.8.0",
     "open-browser-webpack-plugin": "0.0.2",
-    "postcss-loader": "^0.8.0",
+    "postcss-loader": "^0.9.1",
     "precss": "^1.4.0",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
