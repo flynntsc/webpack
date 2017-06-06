@@ -1,7 +1,7 @@
-# Webpack
+# [中文官网](https://doc.webpack-china.org/)
 
+## Plugin
 
-- [webpack指南](http://webpack.toobug.net/zh-cn/)
-- [基于 webpack 搭建前端工程基础篇](https://github.com/chenbin92/react-redux-webpack-starter/issues/1)
-- [如何写一个webpack插件](http://www.alloyteam.com/2016/03/how-to-write-a-plug-in-webpack/)
-- [React移动web极致优化](http://www.alloyteam.com/2016/05/react-mobile-web-optimization/)
+- [CommonsChunkPlugin](https://doc.webpack-china.org/guides/code-splitting-libraries/) 分离第三方库/共用库
+- [ExtractTextWebpackPlugin](https://doc.webpack-china.org/guides/code-splitting-css/) 分离CSS
+- [import()](https://doc.webpack-china.org/guides/code-splitting-async/) 代码按需加载，代替require.ensure()

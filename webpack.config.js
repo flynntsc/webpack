@@ -1,161 +1,94 @@
-const webpack = require('webpack'),
-    path = require('path'),
-    HtmlWebpackPlugin = require('html-webpack-plugin'),
-    OpenBrowserPlugin = require('open-browser-webpack-plugin'),
-    ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    autoprefixer = require('autoprefixer'),
-    precss = require('precss'),
-    env = process.env.WEBPACK_ENV,
-    ProvidePlugin = webpack.ProvidePlugin,
-    UglifyJsPlugin = webpack.optimize.UglifyJsPlugin,
-    CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin,
-    entryJsPath = path.join(__dirname, './src/js/page/'),
-    nodeModulesPath = path.join(__dirname, './node_modules/');
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-if(env === 'build') {
-    console.info('run webpack');
-}
+const resolve = path => require('path').resolve(__dirname, path)
+const url = require('url')
+const publicPath = ''
 
-module.exports = {
+module.exports = (env = {}) => ({
     entry: {
-        'js/index': [
-            'webpack/hot/dev-server',
-            'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryJsPath, 'index.js')
-        ],
-        'js/a': [
-            'webpack/hot/dev-server',
-            'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryJsPath, 'a.jsx')
-        ],
-        'js/b': [
-            'webpack/hot/dev-server',
-            'webpack-dev-server/client?http://localhost:8080',
-            path.join(entryJsPath, 'b.js')
-        ]
+        vendor: './src/vendor',
+        index: './src/main.js'
     },
     output: {
-        path: path.resolve(__dirname, 'build'),
-        // name、hash、chunkhash
-        filename: '[name].js',
-        // publicPath: './'
+        path: resolve('dist'),
+        filename: env.dev ? '[name].js' : 'js/[name].[chunkhash].js',
+        chunkFilename: env.dev ? '[id].js' : '[id].[chunkhash].js',
+        sourceMapFilename: env.dev ? '[file].map' : 'sourcemaps/[file].map',
+        publicPath: env.dev ? '/assets/' : publicPath
     },
-    resolve: {
-        extensions: ['', '.js', '.jsx', '.css', '.less', '.scss', '.jpg', '.png', '.gif'],
-        root: [path.join(__dirname, 'src')],
-        modulesDirectories: ['node_modules'],
-        alias: {
-            'react': path.join(nodeModulesPath, 'react/dist/react.min'),
-            'react-dom': path.join(nodeModulesPath, 'react-dom/dist/react-dom.min'),
-            'jquery': path.join(nodeModulesPath, 'jquery/dist/jquery.min')
-        }
-    },
-    devtool: '#inline-source-map',
     module: {
-        noParse: [
-            path.join(nodeModulesPath, 'react/dist/react.min'),
-            path.join(nodeModulesPath, 'react/dist/react-dom.min'),
-            path.join(nodeModulesPath, 'react/dist/jquery.min')
-        ],
-        loaders: [{
-                test: /\.js[x]?$/,
-                exclude: [nodeModulesPath],
-                // 限定范围
-                // include:[
-                //     path.join(process.cwd(),'./src'),
-                //     path.join(process.cwd(),'./demo')
-                // ],
-
-                // way 1
-                loader: 'babel?presets[]=es2015&presets[]=react'
-
-                // way 2
-                // loader: 'babel',
-                // query: {
-                //     presets: ['es2015','react'],
-                // }
+        rules: [{
+                test: /\.vue$/,
+                use: ['vue-loader']
             },
-            /*{
-                       test: /\.css$/,
-                       loader: 'style!css?module&localIdentName=[name]-[local]-[hash:base64:5]'
-                       // require('./main.css')
-                       // .title{color:#f00;}
-                       // => .main-title-3LKTD{color:#f00;}
-                   }, */
+            {
+                test: /\.js$/,
+                use: ['babel-loader'],
+                exclude: /node_modules/
+            },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css!postcss'),
-                // loader: 'style!css?module',
-            }, {
-                test: /\.less$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css?module!postcss!less'),
-                // loader: 'style!css?module!less',
-            }, {
-                test: /\.scss$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css?module!postcss!sass'),
-                // loader: 'style!css?module!sass',
-            }, {
-                test: /\.(woff|eot|ttf)$/i,
-                loader: 'url?limit=10000&name=fonts/[hash:8].[name].[ext]'
-            }, {
-                test: /\.(jpg|png|gif|svg)$/,
-                loader: 'url?limit=10000',
-                /*loaders: [
-                    'image?{bypassOnDebug: true, progressive:true, \
-                        optimizationLevel: 3, pngquant:{quality: "65-80"}}',
-                    'url?limit=10000&name=img/[hash:8].[name].[ext]',
-                ]*/
+                use: ExtractTextPlugin.extract({
+                    use: ['css-loader', 'postcss-loader']
+                })
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)(\?.+)?$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10000,
+                        name: env.dev ? '[name].[ext]' : 'img/[name].[hash:7].[ext]'
+                    }
+                }]
+            },
+            {
+                test: /\.(eot|ttf|otf|woff2?)(\?.+)?$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10000,
+                        name: env.dev ? '[name].[ext]' : 'fonts/[name].[hash:7].[ext]'
+                    }
+                }]
             }
         ]
     },
-    externals: {
-        // Exposing global variables，easy to require
-        // '$': './jquery/js/lib/jquery'
-    },
     plugins: [
-        // new webpack.HotModuleReplacementPlugin(),
-        new ExtractTextPlugin("[name]" + ".[chunkhash].css"),
-        /*
-        // Vendor chunk,dispense with require.what is necessary?
-        new ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            'window.jQuery': 'jquery'
-        }),*/
-
-        new CommonsChunkPlugin(
-            'js/common.js', ['js/a', 'js/b']
-        ),
-        // don't use in dev
-        /*new UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),*/
-        new HtmlWebpackPlugin({
-            template: './src/html/index.html',
-            filename: 'index.html',
-            inject: true,
-            // hash: true,
-            chunks: ['js/index']
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor', 'manifest']
         }),
         new HtmlWebpackPlugin({
-            template: './src/html/a.html',
-            filename: 'a.html',
-            inject: true,
-            // hash: true,
-            chunks: ['js/common.js', 'js/a']
+            template: 'src/index.html'
         }),
-        new OpenBrowserPlugin({
-            url: 'http://localhost:8080/a.html'
+        new ExtractTextPlugin({
+            filename: env.dev ? '[name].css' : 'css/[name].[contenthash].css',
+            allChunks: true
         })
     ],
-    postcss: function () {
-        return [
-            autoprefixer({
-                browsers: ['last 2 versions']
-            }),
-            precss
-        ];
-    }
-};
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js',
+            '~': resolve('src')
+        }
+    },
+    devServer: {
+        host: '127.0.0.1',
+        port: 8010,
+        proxy: {
+            '/api/': {
+                target: 'http://127.0.0.1:8080',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
+        },
+        historyApiFallback: {
+            index: url.parse(env.dev ? '/assets/' : publicPath).pathname
+        }
+    },
+    devtool: env.dev ? '#eval-source-map' : '#source-map'
+})
