@@ -69,6 +69,7 @@ module.exports = (env = {}) => ({
         })
     ],
     resolve: {
+        extensions: ['.js', '.vue', '.json'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             '~': resolve('src')
@@ -77,6 +78,7 @@ module.exports = (env = {}) => ({
     devServer: {
         host: '127.0.0.1',
         port: 8010,
+        compress: true,
         proxy: {
             '/api/': {
                 target: 'http://127.0.0.1:8080',
